@@ -24,6 +24,8 @@ static int pipe_fd_wakee[2];
 
 unsigned int stop = 0;
 
+int clockid = CLOCK_REALTIME;
+
 typedef enum { PIPE_WAKEUP, TIMER_WAKEUP } wakeup_mode_t;
 typedef enum { IDLE_STATE_NUMERIC, IDLE_STATE_STRING } idle_state_type_t;
 
@@ -56,6 +58,29 @@ struct idle_state {
 };
 
 struct idle_state wakee_idle_states[MAX_IDLE_STATES];
+
+static unsigned long long compute_timediff(struct timespec before,
+					   struct timespec after)
+{
+	unsigned long long ret_ns;
+	unsigned long long ns_per_sec = 1000UL*1000*1000;
+
+	if (after.tv_sec == before.tv_sec) {
+		ret_ns = after.tv_nsec - before.tv_nsec;
+
+		return ret_ns;
+	}
+
+	if (after.tv_sec > before.tv_sec) {
+		unsigned long long diff_ns = 0;
+
+		diff_ns = (after.tv_sec - before.tv_sec) * ns_per_sec;
+		ret_ns = diff_ns + after.tv_nsec - before.tv_nsec;
+		return ret_ns;
+	}
+
+	return 0;
+}
 
 void get_cpu_idle_state(const char *field, int cpu, int state, void *value, idle_state_type_t type) {
     char filepath[256];
@@ -141,7 +166,18 @@ static void set_thread_affinity(pthread_attr_t *attr, cpu_set_t *cpuset) {
 
 
 static void *waker_fn(void *arg) {
+
+    struct timespec begin, cur;
+    unsigned long long time_diff_ns;
+
     while (!stop) {
+
+	    clock_gettime(clockid, &begin);
+	    do {
+		    clock_gettime(clockid, &cur);
+		    time_diff_ns = compute_timediff(begin, cur);
+	    } while (time_diff_ns <= wakeup_interval_ns);
+
         assert(write(pipe_fd_wakee[WRITE], &pipec, 1) == 1);
     }
 }
