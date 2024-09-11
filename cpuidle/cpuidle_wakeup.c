@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <dirent.h>
+#include <string.h>
 
 #define MAX_IDLE_STATES 10
 #define DEFAULT_WAKEUP_INTERVAL_NS 100000ULL
 #define DEFAULT_TEST_DURATION_SEC 5
 
 typedef enum { PIPE_WAKEUP, TIMER_WAKEUP } wakeup_mode_t;
+typedef enum { IDLE_STATE_NUMERIC, IDLE_STATE_STRING } idle_state_type_t;
 
 static wakeup_mode_t current_wakeup_mode = TIMER_WAKEUP;
 
@@ -38,6 +40,40 @@ struct idle_state {
 
 struct idle_state wakee_idle_states[MAX_IDLE_STATES];
 
+
+void get_cpu_idle_state(const char *field, int cpu, int state, void *value, idle_state_type_t type) {
+    char filepath[256];
+    FILE *file;
+    char buffer[64];
+    snprintf(filepath, sizeof(filepath),
+             "/sys/devices/system/cpu/cpu%d/cpuidle/state%d/%s", cpu, state, field);
+    file = fopen(filepath, "r");
+    if (!file) {
+        perror("Error opening file");
+        if (type == IDLE_STATE_NUMERIC) {
+            *(unsigned long long *)value = 0;
+        } else {
+            ((char *)value)[0] = '\0';
+        }
+        return;
+    }
+    if (fgets(buffer, sizeof(buffer), file)) {
+        if (type == IDLE_STATE_NUMERIC) {
+            *(unsigned long long *)value = strtoull(buffer, NULL, 10);
+        } else if (type == IDLE_STATE_STRING) {
+            strncpy((char *)value, buffer, 64);
+            ((char *)value)[strcspn((char *)value, "\n")] = '\0';
+        }
+    } else {
+        if (type == IDLE_STATE_NUMERIC) {
+            *(unsigned long long *)value = 0;
+        } else {
+            ((char *)value)[0] = '\0';
+        }
+    }
+    fclose(file);
+}
+
 unsigned int get_total_idle_states(void) {
     char path[100];
     int state_count = 0;
@@ -61,6 +97,7 @@ static void initialize_wakee_idle_states(void) {
     for (int i = 0; i < total_idle_states; i++) {
         wakee_idle_states[i].cpu_id = wakee_cpu_id;
         wakee_idle_states[i].state_index = i;
+        get_cpu_idle_state("name", wakee_cpu_id, i, wakee_idle_states[i].state_name, IDLE_STATE_STRING);
     }
 }
 
