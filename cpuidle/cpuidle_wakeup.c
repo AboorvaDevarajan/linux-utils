@@ -59,6 +59,16 @@ struct idle_state {
 
 struct idle_state wakee_idle_states[MAX_IDLE_STATES];
 
+struct wakeup_time {
+    struct timespec begin;
+    struct timespec end;
+};
+
+struct wakeup_time wakee_wakeup_time;
+unsigned long long wakee_wakeup_time_total_ns;
+unsigned long long wakee_sleep_time_total_ns;
+unsigned long long wakee_wakeup_count;
+
 static unsigned long long compute_timediff(struct timespec before,
 					   struct timespec after)
 {
@@ -142,6 +152,35 @@ static void initialize_wakee_idle_states(void) {
     }
 }
 
+static void snapshot_idle_state(const char *field_name, struct idle_state *s, unsigned long long *field) {
+    get_cpu_idle_state(field_name, s->cpu_id, s->state_index, field, IDLE_STATE_NUMERIC);
+}
+
+void snapshot_one_before(struct idle_state *s) {
+    snapshot_idle_state("usage", s, &s->before.usage);
+    snapshot_idle_state("above", s, &s->before.above);
+    snapshot_idle_state("below", s, &s->before.below);
+    snapshot_idle_state("time", s, &s->before.time);
+}
+
+void snapshot_one_after(struct idle_state *s) {
+    snapshot_idle_state("usage", s, &s->after.usage);
+    snapshot_idle_state("above", s, &s->after.above);
+    snapshot_idle_state("below", s, &s->after.below);
+    snapshot_idle_state("time", s, &s->after.time);
+}
+
+static void snapshot_all_before(void) {
+    int i;
+    for (i = 0; i < total_idle_states; i++) snapshot_one_before(&wakee_idle_states[i]);
+}
+
+static void snapshot_all_after(void) {
+    int i;
+    for (i = 0; i < total_idle_states; i++) snapshot_one_after(&wakee_idle_states[i]);
+}
+
+
 static cpu_set_t* initialize_cpuset(int num_cpus, int cpu_id) {
     cpu_set_t *cpuset = CPU_ALLOC(num_cpus);
     if (cpuset == NULL) {
@@ -178,14 +217,34 @@ static void *waker_fn(void *arg) {
 		    time_diff_ns = compute_timediff(begin, cur);
 	    } while (time_diff_ns <= wakeup_interval_ns);
 
+        clock_gettime(clockid, &wakee_wakeup_time.begin);
         assert(write(pipe_fd_wakee[WRITE], &pipec, 1) == 1);
     }
 }
 
 static void *wakee_fn(void *arg) {
+
+    snapshot_all_before();
     while (!stop) {
+        unsigned long long wakeup_diff, sleep_diff;
+        struct timespec sleep_begin, sleep_duration;
+        sleep_duration.tv_sec = wakeup_interval_ns / 1000000000ULL;
+        sleep_duration.tv_nsec = wakeup_interval_ns % 1000000000ULL;
+        clock_gettime(clockid, &sleep_begin);
+
         assert(read(pipe_fd_wakee[READ], &pipec, 1) == 1);
+
+        clock_gettime(clockid, &wakee_wakeup_time.end);
+	    wakeup_diff = compute_timediff(wakee_wakeup_time.begin,
+				     wakee_wakeup_time.end);
+        wakee_wakeup_time_total_ns += wakeup_diff;
+	    sleep_diff = compute_timediff(sleep_begin, wakee_wakeup_time.end);
+	    wakee_sleep_time_total_ns += sleep_diff;
+        wakee_wakeup_count++;
+
     }
+    snapshot_all_after();
+
 }
 
 static void create_thread(pthread_t *thread, pthread_attr_t *attr, void *(*start_routine)(void *), const char *thread_name) {
@@ -229,6 +288,23 @@ void create_pipe(void) {
     if (pipe(pipe_fd_wakee)) {
         printf("Failed to create pipe\n");
         exit(EXIT_FAILURE);
+    }
+}
+
+void print_idle_state_summary(int cpu_wakee, int nr_idle_states, struct idle_state *wakee_idle_states) {
+    printf("Idle state summary for CPU %d:\n", cpu_wakee);
+
+    for (int i = 0; i < nr_idle_states; i++) {
+        struct idle_state *state = &wakee_idle_states[i];
+        printf("State %d (%s):\n", i, state->state_name);
+        printf("  Usage diff: %llu\n",
+               state->after.usage - state->before.usage);
+        printf("  Time diff: %llu ns\n",
+               state->after.time - state->before.time);
+        printf("  Above diff: %llu\n",
+               state->after.above - state->before.above);
+        printf("  Below diff: %llu\n",
+               state->after.below - state->before.below);
     }
 }
 
@@ -290,6 +366,18 @@ int main(int argc, char *argv[]) {
     stop = 1;
 
     cleanup();
+
+    if(current_wakeup_mode == PIPE_WAKEUP) {
+        printf("Test complete. Wakee wakeups: %llu, Total wake time: %llu ns\n",
+               wakee_wakeup_count, wakee_wakeup_time_total_ns);
+	    printf("Wakee thread average wakeup latency  = %4.3f us\n",
+		        wakee_wakeup_count ? ((double)(wakee_wakeup_time_total_ns)/((wakee_wakeup_count)*1000)) : 0);
+    }
+
+	printf("Wakee thread sleep interval  = %4.3f us\n",
+		    wakee_wakeup_count ? ((double)(wakee_sleep_time_total_ns)/((wakee_wakeup_count)*1000)) : 0);
+
+    print_idle_state_summary(wakee_cpu_id, total_idle_states, wakee_idle_states);
+
     return 0;
 }
-
