@@ -1,16 +1,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <dirent.h>
 
-typedef enum { MODE_PIPE, MODE_TIMER } wakeup_mode_t;
+#define MAX_IDLE_STATES 10
+#define DEFAULT_WAKEUP_INTERVAL_NS 100000ULL
+#define DEFAULT_TEST_DURATION_SEC 5
 
-static wakeup_mode_t wakeup_mode = MODE_TIMER; // Default mode
+typedef enum { PIPE_WAKEUP, TIMER_WAKEUP } wakeup_mode_t;
 
-// Global configuration variables
-int wakee_cpu = 0;
-int waker_cpu = 0;
-unsigned long wakeup_interval_ns = 100000ULL; // Default wakeup interval in ns
-unsigned long test_duration_sec = 5; // Default test duration in seconds
+static wakeup_mode_t current_wakeup_mode = TIMER_WAKEUP;
+
+int wakee_cpu_id = 0;
+int waker_cpu_id = 0;
+int total_idle_states = 0;
+
+unsigned long wakeup_interval_ns = DEFAULT_WAKEUP_INTERVAL_NS;
+unsigned long test_duration_sec = DEFAULT_TEST_DURATION_SEC;
+
+const char *cpuidle_path_template = "/sys/devices/system/cpu/cpu%d/cpuidle";
+
+struct idle_state_data {
+    unsigned long long usage;
+    unsigned long long time;
+    unsigned long long above;
+    unsigned long long below;
+};
+
+struct idle_state {
+    int cpu_id;
+    int state_index;
+    char state_name[50];
+
+    struct idle_state_data before;
+    struct idle_state_data after;
+};
+
+struct idle_state wakee_idle_states[MAX_IDLE_STATES];
+
+unsigned int get_total_idle_states(void) {
+    char path[100];
+    int state_count = 0;
+    DIR *dir;
+    struct dirent *entry;
+
+    snprintf(path, sizeof(path), cpuidle_path_template, 0);
+    dir = opendir(path);
+    if (!dir) return 0;
+
+    while ((entry = readdir(dir))) {
+        if (entry->d_name[0] != '.') {
+            state_count++;
+        }
+    }
+    closedir(dir);
+    return state_count;
+}
+
+static void initialize_wakee_idle_states(void) {
+    for (int i = 0; i < total_idle_states; i++) {
+        wakee_idle_states[i].cpu_id = wakee_cpu_id;
+        wakee_idle_states[i].state_index = i;
+    }
+}
 
 void print_usage(void) {
     printf("Usage: [options]\n"
@@ -23,6 +75,7 @@ void print_usage(void) {
            "-h                      Show this help message\n");
 }
 
+// Main function
 int main(int argc, char *argv[]) {
     int opt;
 
@@ -30,10 +83,10 @@ int main(int argc, char *argv[]) {
     while ((opt = getopt(argc, argv, "w:e:s:d:pth")) != -1) {
         switch (opt) {
         case 'w':
-            wakee_cpu = atoi(optarg);
+            wakee_cpu_id = atoi(optarg);
             break;
         case 'e':
-            waker_cpu = atoi(optarg);
+            waker_cpu_id = atoi(optarg);
             break;
         case 's':
             wakeup_interval_ns = strtoul(optarg, NULL, 10) * 1000;
@@ -42,10 +95,10 @@ int main(int argc, char *argv[]) {
             test_duration_sec = strtoul(optarg, NULL, 10);
             break;
         case 'p':
-            wakeup_mode = MODE_PIPE;
+            current_wakeup_mode = PIPE_WAKEUP;
             break;
         case 't':
-            wakeup_mode = MODE_TIMER;
+            current_wakeup_mode = TIMER_WAKEUP;
             break;
         case 'h':
         default:
@@ -54,7 +107,15 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Implement the rest of the program logic here
+    if (wakee_cpu_id == 0 || waker_cpu_id == 0) {
+        print_usage();
+        exit(EXIT_FAILURE);
+    }
+
+    total_idle_states = get_total_idle_states();
+    printf("Total CPU Idle states: %d\n", total_idle_states);
+
+    initialize_wakee_idle_states();
 
     return 0;
 }
