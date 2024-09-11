@@ -16,6 +16,12 @@
 #define DEFAULT_WAKEUP_INTERVAL_NS 100000ULL
 #define DEFAULT_TEST_DURATION_SEC 5
 
+#define READ 0
+#define WRITE 1
+
+char pipec;
+static int pipe_fd_wakee[2];
+
 unsigned int stop = 0;
 
 typedef enum { PIPE_WAKEUP, TIMER_WAKEUP } wakeup_mode_t;
@@ -136,13 +142,13 @@ static void set_thread_affinity(pthread_attr_t *attr, cpu_set_t *cpuset) {
 
 static void *waker_fn(void *arg) {
     while (!stop) {
-
+        assert(write(pipe_fd_wakee[WRITE], &pipec, 1) == 1);
     }
 }
 
 static void *wakee_fn(void *arg) {
     while (!stop) {
-
+        assert(read(pipe_fd_wakee[READ], &pipec, 1) == 1);
     }
 }
 
@@ -179,8 +185,16 @@ void initialize_threads(void) {
 void cleanup(void) {
     pthread_join(wakee_tid, NULL);
     pthread_join(waker_tid, NULL);
+    close(pipe_fd_wakee[READ]);
+    close(pipe_fd_wakee[WRITE]);
 }
 
+void create_pipe(void) {
+    if (pipe(pipe_fd_wakee)) {
+        printf("Failed to create pipe\n");
+        exit(EXIT_FAILURE);
+    }
+}
 
 void print_usage(void) {
     printf("Usage: [options]\n"
@@ -232,8 +246,10 @@ int main(int argc, char *argv[]) {
     printf("Total CPU Idle states: %d\n", total_idle_states);
 
     initialize_wakee_idle_states();
-    initialize_threads();
+    create_pipe();    
 
+    initialize_threads();
+    
     sleep(test_duration_sec);
     stop = 1;
 
