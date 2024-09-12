@@ -327,21 +327,46 @@ void create_pipe(void) {
 }
 
 void print_idle_state_summary(int cpu_wakee, int nr_idle_states, struct idle_state *wakee_idle_states) {
+    unsigned long long total_above_diff = 0, total_below_diff = 0, total_usage_diff = 0, total_time_diff = 0;
+
     printf("Idle state summary for CPU %d:\n", cpu_wakee);
 
     for (int i = 0; i < nr_idle_states; i++) {
         struct idle_state *state = &wakee_idle_states[i];
+
+        unsigned long long usage_diff = state->after.usage - state->before.usage;
+        unsigned long long above_diff = state->after.above - state->before.above;
+        unsigned long long below_diff = state->after.below - state->before.below;
+        unsigned long long time_diff = state->after.time - state->before.time;
+
+        total_above_diff += above_diff;
+        total_below_diff += below_diff;
+        total_usage_diff += usage_diff;
+        total_time_diff += time_diff;
+
+        double above_percentage = (usage_diff > 0) ? (double)above_diff / usage_diff * 100.0 : 0.0;
+        double below_percentage = (usage_diff > 0) ? (double)below_diff / usage_diff * 100.0 : 0.0;
+
         printf("State %d (%s):\n", i, state->state_name);
-        printf("  Usage diff: %llu\n",
-               state->after.usage - state->before.usage);
-        printf("  Time diff: %llu ns\n",
-               state->after.time - state->before.time);
-        printf("  Above diff: %llu\n",
-               state->after.above - state->before.above);
-        printf("  Below diff: %llu\n",
-               state->after.below - state->before.below);
+        printf("  Usage diff: %llu\n", usage_diff);
+        printf("  Time diff: %llu ns\n", time_diff);
+        printf("  Above diff: %llu (%.2f%%)\n", above_diff, above_percentage);
+        printf("  Below diff: %llu (%.2f%%)\n", below_diff, below_percentage);
+    }
+
+    printf("\n----- Overall Above/Below Summary -----\n");
+    if (total_usage_diff > 0) {
+        double total_above_percentage = (double)total_above_diff / total_usage_diff * 100.0;
+        double total_below_percentage = (double)total_below_diff / total_usage_diff * 100.0;
+
+        printf("Total Above: %llu (%.2f%% of total usage)\n", total_above_diff, total_above_percentage);
+        printf("Total Below: %llu (%.2f%% of total usage)\n", total_below_diff, total_below_percentage);
+
+    } else {
+        printf("No usage detected.\n");
     }
 }
+
 
 void print_usage(void) {
     printf("Usage: [options]\n"
