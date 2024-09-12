@@ -209,16 +209,21 @@ static void *waker_fn(void *arg) {
     struct timespec begin, cur;
     unsigned long long time_diff_ns;
 
-    while (!stop) {
 
-	    clock_gettime(clockid, &begin);
-	    do {
-		    clock_gettime(clockid, &cur);
-		    time_diff_ns = compute_timediff(begin, cur);
-	    } while (time_diff_ns <= wakeup_interval_ns);
+    if(current_wakeup_mode == PIPE_WAKEUP) {
+        while (!stop) {
 
-        clock_gettime(clockid, &wakee_wakeup_time.begin);
-        assert(write(pipe_fd_wakee[WRITE], &pipec, 1) == 1);
+	        clock_gettime(clockid, &begin);
+	        do {
+		        clock_gettime(clockid, &cur);
+		        time_diff_ns = compute_timediff(begin, cur);
+	        } while (time_diff_ns <= wakeup_interval_ns);
+
+            clock_gettime(clockid, &wakee_wakeup_time.begin);
+            assert(write(pipe_fd_wakee[WRITE], &pipec, 1) == 1);
+        }
+    } else {
+        // add a print
     }
 }
 
@@ -232,7 +237,12 @@ static void *wakee_fn(void *arg) {
         sleep_duration.tv_nsec = wakeup_interval_ns % 1000000000ULL;
         clock_gettime(clockid, &sleep_begin);
 
-        assert(read(pipe_fd_wakee[READ], &pipec, 1) == 1);
+
+        if(current_wakeup_mode == PIPE_WAKEUP) {
+            assert(read(pipe_fd_wakee[READ], &pipec, 1) == 1);
+        } else {
+            nanosleep(&sleep_duration, NULL);
+        }
 
         clock_gettime(clockid, &wakee_wakeup_time.end);
 	    wakeup_diff = compute_timediff(wakee_wakeup_time.begin,
