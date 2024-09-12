@@ -228,6 +228,31 @@ static void *waker_fn(void *arg) {
 }
 
 static void *wakee_fn(void *arg) {
+    /*
+     Actual sleep duration after this thread always higher than the
+     expected sleep duration. 
+
+     Since precise timing is critical, using a real-time scheduling policy SCHED_FIFO.
+     This can reduce the impact of context switching and makes sleep durations more predictable.
+
+     Before this:
+     # ./cpuidle_wakeup  -w 110 -e 20 -s 50  (sleep duration is 50 us)
+    Total CPU Idle states: 2
+    CPU Wakee: 110, CPU Waker: 20
+    Wakee thread sleep interval  = 102.854 us  (actual sleep duration is 100 us)
+
+
+    After this:
+    # ./cpuidle_wakeup  -w 110 -e 20 -s 50 (sleep duration is 50 us)
+    Total CPU Idle states: 2
+    CPU Wakee: 110, CPU Waker: 20
+    Wakee thread sleep interval  = 52.632 us  (actual sleep duration is 52 us)
+    */
+    struct sched_param param;
+    param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+    if (pthread_setschedparam(pthread_self(), SCHED_FIFO, &param) != 0) {
+        perror("pthread_setschedparam");
+    }
 
     snapshot_all_before();
     while (!stop) {
