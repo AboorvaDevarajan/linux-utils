@@ -1,12 +1,16 @@
-The CPU Idle State Wakeup Test is a simple program that helps CPU behaves when it wakes up from CPU Idle states.
+The CPU Idle state wakeup test tests CPU wakeup behavior by simulating frequent wakeups between two threads
+running on specified CPUs. It measures idle state transitions, which can be useful for benchmarking power
+management features of a CPU.
+
+## What does this test do?
 
 This test spawns two threads, waker thread and the wakee thread:
 
-Waker thread keeps waking up the wakee thread either through a timer or by sending messages through a pipe after
-a specified interval.
+Waker thread keeps waking up the wakee thread either through a timer or by sending messages through a
+pipe after a specified interval.
 
-The test measures how often the CPU transitions in and out of its idle states and how long it spends in these
-states and more cpuidle stats.
+The test measures how often the CPU transitions in and out of its idle states and how long it spends in
+these states and more cpuidle stats.
 
 ### Modes
 
