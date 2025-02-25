@@ -4,7 +4,10 @@
 
 /*
 * Standalone test to verify: predicted cpuidle duration using get_typical_interval: 
-* https://github.com/torvalds/linux/blob/v6.14-rc4/drivers/cpuidle/governors/menu.c#L117
+* https://github.com/torvalds/linux/blob/v6.14-rc4/drivers/cpuidle/governors/menu.c#L1174
+* 
+* This is to reveiw changes: get_typical_interval:
+* https://lore.kernel.org/all/1916668.tdWV9SEqCh@rjwysocki.net/
 */
 
 #define INTERVAL_SHIFT 3
@@ -28,6 +31,9 @@ struct menu_device {
     unsigned int intervals[INTERVALS];
 };
 
+/* This is copied from
+ * https://github.com/torvalds/linux/blob/v6.14-rc4/drivers/cpuidle/governors/menu.c#L117
+ */
 static unsigned int get_typical_interval_before(struct menu_device *data) {
     int i, divisor;
     unsigned int min, max, thresh, avg;
@@ -76,6 +82,10 @@ again:
     goto again;
 }
 
+/*
+ * This is copied from:
+ * https://lore.kernel.org/all/1916668.tdWV9SEqCh@rjwysocki.net/
+ */
 static unsigned int get_typical_interval_after(struct menu_device *data) {
     s64 value, min_thresh = -1, max_thresh = UINT_MAX;
     unsigned int max, min, divisor;
@@ -168,6 +178,8 @@ int main() {
         {{3, 6, 9, 12, 15, 18, 21, 24}}, 
         {{1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000}}, 
 
+	{{100000,200,200,250,250,230,220,260}},
+	{{1,200,200,250,250,230,220,260}}
     };
 
     //generate some more tests
