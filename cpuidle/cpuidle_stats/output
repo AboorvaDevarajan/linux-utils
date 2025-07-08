@@ -1,0 +1,583 @@
+
+Starting CPU Idle analysis...
+
+
+CPU Idle State Statistics (perf script)
+
+CPU 0:
+  State C1:
+    Entries     : 29
+    Total Time  : 2111328.01 us
+    Avg Duration: 72804.41 us
+    Min Duration: 343.70 us
+    Max Duration: 844516.89 us
+    Percentiles :
+        1.00% : 494.88 us
+       10.00% : 4958.63 us
+       50.00% : 10002.19 us
+       75.00% : 30003.59 us
+       90.00% : 148803.04 us
+       95.00% : 346568.08 us
+       99.00% : 709042.63 us
+       99.99% : 843162.15 us
+      100.00% : 844516.89 us
+
+CPU 1:
+  State C1:
+    Entries     : 6
+    Total Time  : 2111489.77 us
+    Avg Duration: 351914.96 us
+    Min Duration: 535.66 us
+    Max Duration: 1597794.25 us
+    Percentiles :
+        1.00% : 539.94 us
+       10.00% : 578.50 us
+       50.00% : 65943.76 us
+       75.00% : 307986.18 us
+       90.00% : 989222.63 us
+       95.00% : 1293508.44 us
+       99.00% : 1536937.08 us
+       99.99% : 1597185.67 us
+      100.00% : 1597794.25 us
+
+CPU 2:
+  State C1:
+    Entries     : 7
+    Total Time  : 2111407.17 us
+    Avg Duration: 301629.60 us
+    Min Duration: 190.34 us
+    Max Duration: 894148.25 us
+    Percentiles :
+        1.00% : 195.22 us
+       10.00% : 239.13 us
+       50.00% : 163601.77 us
+       75.00% : 503567.46 us
+       90.00% : 859505.28 us
+       95.00% : 876826.76 us
+       99.00% : 890683.95 us
+       99.99% : 894113.60 us
+      100.00% : 894148.25 us
+
+CPU 3:
+  State C1:
+    Entries     : 35
+    Total Time  : 2108028.38 us
+    Avg Duration: 60229.38 us
+    Min Duration: 152.24 us
+    Max Duration: 741364.73 us
+    Percentiles :
+        1.00% : 647.60 us
+       10.00% : 9968.53 us
+       50.00% : 9997.87 us
+       75.00% : 10008.98 us
+       90.00% : 137236.19 us
+       95.00% : 404054.22 us
+       99.00% : 628705.32 us
+       99.99% : 740238.13 us
+      100.00% : 741364.73 us
+
+CPU 4:
+  State C1:
+    Entries     : 3
+    Total Time  : 2111447.61 us
+    Avg Duration: 703815.87 us
+    Min Duration: 649.06 us
+    Max Duration: 1730046.29 us
+    Percentiles :
+        1.00% : 8251.13 us
+       10.00% : 76669.70 us
+       50.00% : 380752.25 us
+       75.00% : 1055399.27 us
+       90.00% : 1460187.48 us
+       95.00% : 1595116.88 us
+       99.00% : 1703060.41 us
+       99.99% : 1729776.43 us
+      100.00% : 1730046.29 us
+
+CPU 5:
+  State C0:
+    Entries     : 1
+    Total Time  : 123.49 us
+    Avg Duration: 123.49 us
+    Min Duration: 123.49 us
+    Max Duration: 123.49 us
+    Percentiles :
+        1.00% : 123.49 us
+       10.00% : 123.49 us
+       50.00% : 123.49 us
+       75.00% : 123.49 us
+       90.00% : 123.49 us
+       95.00% : 123.49 us
+       99.00% : 123.49 us
+       99.99% : 123.49 us
+      100.00% : 123.49 us
+  State C1:
+    Entries     : 38
+    Total Time  : 2100202.97 us
+    Avg Duration: 55268.50 us
+    Min Duration: 524.10 us
+    Max Duration: 409793.53 us
+    Percentiles :
+        1.00% : 524.44 us
+       10.00% : 4440.70 us
+       50.00% : 9998.13 us
+       75.00% : 37102.56 us
+       90.00% : 170266.17 us
+       95.00% : 315840.86 us
+       99.00% : 403534.01 us
+       99.99% : 409730.94 us
+      100.00% : 409793.53 us
+
+CPU 6:
+  State C1:
+    Entries     : 4
+    Total Time  : 2111411.33 us
+    Avg Duration: 527852.83 us
+    Min Duration: 140.77 us
+    Max Duration: 1426792.50 us
+    Percentiles :
+        1.00% : 9246.12 us
+       10.00% : 91194.27 us
+       50.00% : 342239.03 us
+       75.00% : 642317.36 us
+       90.00% : 1113002.45 us
+       95.00% : 1269897.47 us
+       99.00% : 1395413.50 us
+       99.99% : 1426478.71 us
+      100.00% : 1426792.50 us
+
+CPU 7:
+  State C0:
+    Entries     : 1
+    Total Time  : 122.94 us
+    Avg Duration: 122.94 us
+    Min Duration: 122.94 us
+    Max Duration: 122.94 us
+    Percentiles :
+        1.00% : 122.94 us
+       10.00% : 122.94 us
+       50.00% : 122.94 us
+       75.00% : 122.94 us
+       90.00% : 122.94 us
+       95.00% : 122.94 us
+       99.00% : 122.94 us
+       99.99% : 122.94 us
+      100.00% : 122.94 us
+  State C1:
+    Entries     : 3
+    Total Time  : 2111278.61 us
+    Avg Duration: 703759.54 us
+    Min Duration: 350572.93 us
+    Max Duration: 1379848.68 us
+    Percentiles :
+        1.00% : 351178.61 us
+       10.00% : 356629.74 us
+       50.00% : 380857.00 us
+       75.00% : 880352.84 us
+       90.00% : 1180050.35 us
+       95.00% : 1279949.52 us
+       99.00% : 1359868.85 us
+       99.99% : 1379648.89 us
+      100.00% : 1379848.68 us
+
+CPU 8:
+  State C1:
+    Entries     : 88
+    Total Time  : 2110016.97 us
+    Avg Duration: 23977.47 us
+    Min Duration: 1542.87 us
+    Max Duration: 50053.84 us
+    Percentiles :
+        1.00% : 1806.11 us
+       10.00% : 6451.70 us
+       50.00% : 23042.26 us
+       75.00% : 34512.35 us
+       90.00% : 47652.81 us
+       95.00% : 50050.20 us
+       99.00% : 50051.78 us
+       99.99% : 50053.82 us
+      100.00% : 50053.84 us
+
+CPU 9:
+  State C0:
+    Entries     : 1
+    Total Time  : 123.83 us
+    Avg Duration: 123.83 us
+    Min Duration: 123.83 us
+    Max Duration: 123.83 us
+    Percentiles :
+        1.00% : 123.83 us
+       10.00% : 123.83 us
+       50.00% : 123.83 us
+       75.00% : 123.83 us
+       90.00% : 123.83 us
+       95.00% : 123.83 us
+       99.00% : 123.83 us
+       99.99% : 123.83 us
+      100.00% : 123.83 us
+  State C1:
+    Entries     : 18
+    Total Time  : 2111019.17 us
+    Avg Duration: 117278.84 us
+    Min Duration: 7111.48 us
+    Max Duration: 611258.60 us
+    Percentiles :
+        1.00% : 7496.46 us
+       10.00% : 9806.55 us
+       50.00% : 63979.90 us
+       75.00% : 95889.47 us
+       90.00% : 266762.96 us
+       95.00% : 435381.85 us
+       99.00% : 576083.25 us
+       99.99% : 610906.85 us
+      100.00% : 611258.60 us
+
+CPU 10:
+  State C1:
+    Entries     : 31
+    Total Time  : 2110702.35 us
+    Avg Duration: 68087.17 us
+    Min Duration: 593.22 us
+    Max Duration: 200050.72 us
+    Percentiles :
+        1.00% : 643.60 us
+       10.00% : 1010.88 us
+       50.00% : 30455.19 us
+       75.00% : 125065.45 us
+       90.00% : 200048.53 us
+       95.00% : 200049.94 us
+       99.00% : 200050.58 us
+       99.99% : 200050.72 us
+      100.00% : 200050.72 us
+
+CPU 11:
+  State C1:
+    Entries     : 13
+    Total Time  : 2111243.04 us
+    Avg Duration: 162403.31 us
+    Min Duration: 16.35 us
+    Max Duration: 200049.32 us
+    Percentiles :
+        1.00% : 1345.38 us
+       10.00% : 39088.35 us
+       50.00% : 200048.26 us
+       75.00% : 200048.69 us
+       90.00% : 200049.20 us
+       95.00% : 200049.30 us
+       99.00% : 200049.31 us
+       99.99% : 200049.32 us
+      100.00% : 200049.32 us
+
+CPU 12:
+  State C0:
+    Entries     : 1
+    Total Time  : 122.69 us
+    Avg Duration: 122.69 us
+    Min Duration: 122.69 us
+    Max Duration: 122.69 us
+    Percentiles :
+        1.00% : 122.69 us
+       10.00% : 122.69 us
+       50.00% : 122.69 us
+       75.00% : 122.69 us
+       90.00% : 122.69 us
+       95.00% : 122.69 us
+       99.00% : 122.69 us
+       99.99% : 122.69 us
+      100.00% : 122.69 us
+  State C1:
+    Entries     : 8
+    Total Time  : 2111155.12 us
+    Avg Duration: 263894.39 us
+    Min Duration: 10003.04 us
+    Max Duration: 520705.72 us
+    Percentiles :
+        1.00% : 10688.49 us
+       10.00% : 16857.52 us
+       50.00% : 355581.97 us
+       75.00% : 402142.03 us
+       90.00% : 443215.04 us
+       95.00% : 481960.38 us
+       99.00% : 512956.65 us
+       99.99% : 520628.23 us
+      100.00% : 520705.72 us
+
+CPU 13:
+  State C1:
+    Entries     : 16
+    Total Time  : 2111203.77 us
+    Avg Duration: 131950.24 us
+    Min Duration: 1158.39 us
+    Max Duration: 200049.41 us
+    Percentiles :
+        1.00% : 2360.07 us
+       10.00% : 9546.58 us
+       50.00% : 174461.23 us
+       75.00% : 200048.81 us
+       90.00% : 200049.25 us
+       95.00% : 200049.36 us
+       99.00% : 200049.40 us
+       99.99% : 200049.41 us
+      100.00% : 200049.41 us
+
+CPU 14:
+  State C1:
+    Entries     : 50
+    Total Time  : 2110435.72 us
+    Avg Duration: 42208.71 us
+    Min Duration: 12.25 us
+    Max Duration: 69986.35 us
+    Percentiles :
+        1.00% : 3381.49 us
+       10.00% : 9974.98 us
+       50.00% : 50540.03 us
+       75.00% : 59984.06 us
+       90.00% : 61000.50 us
+       95.00% : 69965.23 us
+       99.00% : 69983.44 us
+       99.99% : 69986.32 us
+      100.00% : 69986.35 us
+
+CPU 15:
+  State C1:
+    Entries     : 14
+    Total Time  : 2111250.87 us
+    Avg Duration: 150803.63 us
+    Min Duration: 123.69 us
+    Max Duration: 250050.34 us
+    Percentiles :
+        1.00% : 434.19 us
+       10.00% : 5594.72 us
+       50.00% : 142335.82 us
+       75.00% : 250048.45 us
+       90.00% : 250049.83 us
+       95.00% : 250050.15 us
+       99.00% : 250050.30 us
+       99.99% : 250050.34 us
+      100.00% : 250050.34 us
+
+CPU 16:
+  State C0:
+    Entries     : 1
+    Total Time  : 122.78 us
+    Avg Duration: 122.78 us
+    Min Duration: 122.78 us
+    Max Duration: 122.78 us
+    Percentiles :
+        1.00% : 122.78 us
+       10.00% : 122.78 us
+       50.00% : 122.78 us
+       75.00% : 122.78 us
+       90.00% : 122.78 us
+       95.00% : 122.78 us
+       99.00% : 122.78 us
+       99.99% : 122.78 us
+      100.00% : 122.78 us
+  State C1:
+    Entries     : 10
+    Total Time  : 2111190.32 us
+    Avg Duration: 211119.03 us
+    Min Duration: 132.45 us
+    Max Duration: 1710009.25 us
+    Percentiles :
+        1.00% : 145.21 us
+       10.00% : 260.04 us
+       50.00% : 9992.68 us
+       75.00% : 123339.99 us
+       90.00% : 300473.40 us
+       95.00% : 1005241.32 us
+       99.00% : 1569055.66 us
+       99.99% : 1708599.71 us
+      100.00% : 1710009.25 us
+
+CPU 17:
+  State C0:
+    Entries     : 1
+    Total Time  : 122.64 us
+    Avg Duration: 122.64 us
+    Min Duration: 122.64 us
+    Max Duration: 122.64 us
+    Percentiles :
+        1.00% : 122.64 us
+       10.00% : 122.64 us
+       50.00% : 122.64 us
+       75.00% : 122.64 us
+       90.00% : 122.64 us
+       95.00% : 122.64 us
+       99.00% : 122.64 us
+       99.99% : 122.64 us
+      100.00% : 122.64 us
+  State C1:
+    Entries     : 148
+    Total Time  : 2110434.90 us
+    Avg Duration: 14259.70 us
+    Min Duration: 3.29 us
+    Max Duration: 185656.37 us
+    Percentiles :
+        1.00% : 37.29 us
+       10.00% : 2059.24 us
+       50.00% : 9994.48 us
+       75.00% : 10004.69 us
+       90.00% : 27243.44 us
+       95.00% : 49992.85 us
+       99.00% : 95909.58 us
+       99.99% : 184438.99 us
+      100.00% : 185656.37 us
+
+CPU 18:
+  State C0:
+    Entries     : 2
+    Total Time  : 246.50 us
+    Avg Duration: 123.25 us
+    Min Duration: 122.31 us
+    Max Duration: 124.19 us
+    Percentiles :
+        1.00% : 122.33 us
+       10.00% : 122.50 us
+       50.00% : 123.25 us
+       75.00% : 123.72 us
+       90.00% : 124.00 us
+       95.00% : 124.10 us
+       99.00% : 124.17 us
+       99.99% : 124.19 us
+      100.00% : 124.19 us
+  State C1:
+    Entries     : 2
+    Total Time  : 2111113.48 us
+    Avg Duration: 1055556.74 us
+    Min Duration: 371186.19 us
+    Max Duration: 1739927.29 us
+    Percentiles :
+        1.00% : 384873.60 us
+       10.00% : 508060.30 us
+       50.00% : 1055556.74 us
+       75.00% : 1397742.01 us
+       90.00% : 1603053.18 us
+       95.00% : 1671490.23 us
+       99.00% : 1726239.88 us
+       99.99% : 1739790.41 us
+      100.00% : 1739927.29 us
+
+CPU 19:
+  State C1:
+    Entries     : 63
+    Total Time  : 2110187.40 us
+    Avg Duration: 33495.04 us
+    Min Duration: 31.12 us
+    Max Duration: 229967.09 us
+    Percentiles :
+        1.00% : 102.27 us
+       10.00% : 9985.37 us
+       50.00% : 19983.17 us
+       75.00% : 20000.88 us
+       90.00% : 74358.35 us
+       95.00% : 118002.48 us
+       99.00% : 223770.95 us
+       99.99% : 229905.13 us
+      100.00% : 229967.09 us
+
+CPU 20:
+  State C0:
+    Entries     : 1
+    Total Time  : 123.43 us
+    Avg Duration: 123.43 us
+    Min Duration: 123.43 us
+    Max Duration: 123.43 us
+    Percentiles :
+        1.00% : 123.43 us
+       10.00% : 123.43 us
+       50.00% : 123.43 us
+       75.00% : 123.43 us
+       90.00% : 123.43 us
+       95.00% : 123.43 us
+       99.00% : 123.43 us
+       99.99% : 123.43 us
+      100.00% : 123.43 us
+  State C1:
+    Entries     : 14
+    Total Time  : 2111116.55 us
+    Avg Duration: 150794.04 us
+    Min Duration: 158.44 us
+    Max Duration: 791846.56 us
+    Percentiles :
+        1.00% : 179.89 us
+       10.00% : 3218.75 us
+       50.00% : 10197.39 us
+       75.00% : 163300.66 us
+       90.00% : 524083.90 us
+       95.00% : 660380.06 us
+       99.00% : 765553.26 us
+       99.99% : 791583.63 us
+      100.00% : 791846.56 us
+
+CPU 21:
+  State C0:
+    Entries     : 2
+    Total Time  : 245.14 us
+    Avg Duration: 122.57 us
+    Min Duration: 122.21 us
+    Max Duration: 122.93 us
+    Percentiles :
+        1.00% : 122.22 us
+       10.00% : 122.29 us
+       50.00% : 122.57 us
+       75.00% : 122.75 us
+       90.00% : 122.85 us
+       95.00% : 122.89 us
+       99.00% : 122.92 us
+       99.99% : 122.93 us
+      100.00% : 122.93 us
+  State C1:
+    Entries     : 27
+    Total Time  : 2109965.12 us
+    Avg Duration: 78146.86 us
+    Min Duration: 760.93 us
+    Max Duration: 272984.49 us
+    Percentiles :
+        1.00% : 800.37 us
+       10.00% : 2437.70 us
+       50.00% : 23818.07 us
+       75.00% : 166535.10 us
+       90.00% : 226243.93 us
+       95.00% : 235038.46 us
+       99.00% : 263901.42 us
+       99.99% : 272893.66 us
+      100.00% : 272984.49 us
+
+CPU 22:
+  State C1:
+    Entries     : 3
+    Total Time  : 2111301.49 us
+    Avg Duration: 703767.16 us
+    Min Duration: 166.75 us
+    Max Duration: 1739836.23 us
+    Percentiles :
+        1.00% : 7589.39 us
+       10.00% : 74393.10 us
+       50.00% : 371298.51 us
+       75.00% : 1055567.37 us
+       90.00% : 1466128.69 us
+       95.00% : 1602982.46 us
+       99.00% : 1712465.48 us
+       99.99% : 1739562.52 us
+      100.00% : 1739836.23 us
+
+CPU 23:
+  State C1:
+    Entries     : 12
+    Total Time  : 2110896.59 us
+    Avg Duration: 175908.05 us
+    Min Duration: 472.84 us
+    Max Duration: 1009356.53 us
+    Percentiles :
+        1.00% : 500.87 us
+       10.00% : 1118.11 us
+       50.00% : 24003.68 us
+       75.00% : 124106.59 us
+       90.00% : 559073.47 us
+       95.00% : 773226.39 us
+       99.00% : 962130.50 us
+       99.99% : 1008884.27 us
+      100.00% : 1009356.53 us
+
+CSV raw residency data saved to: cpuidle_residencies.csv
